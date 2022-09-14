@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Document</title>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+     <style>
+          * {
+               margin: 0;
+               padding: 0;
+               box-sizing: border-box;
+               font-family: sans-serif;
+               letter-spacing: 1px;
+               transition: all .35s linear;
+          }
+          html{
+               /* display: none; */
+          }
+          body {
+               display: flex;
+               justify-content: center;
+               align-items: center;
+               min-height: 100vh;
+               --bg: #613594;
+               background: var(--bg);
+               color: aliceblue;
+          }
+
+          .player {
+               width: 640px;
+               background-color: var(--bg);
+               display: grid;
+               grid-template-columns: 48px 1fr 48px;
+               grid-gap: 1rem;
+               padding: 8px 24px;
+               position: relative;
+               border-radius: 64px;
+          }
+
+          .control,
+          #current {
+               height: 100%;
+               display: flex;
+               justify-content: center;
+               align-items: center;
+               padding-block: 1rem;
+          }
+
+          #playbtn {
+               font-size: 24px;
+               color: transparent;
+               -webkit-text-stroke-width: 1px;
+               -webkit-text-stroke-color: aliceblue;
+               cursor: pointer;
+          }
+          #playbtn.hover{
+               -webkit-text-fill-color: aliceblue;
+          }
+          .info{
+               display: flex;
+               /* justify-content: center; */
+               align-items: center;
+               font-size: 21px;
+          }
+          #current {
+               text-align: right;
+          }
+          .bar{
+               --space: -4px;
+               background-color: #24242424;
+               overflow: hidden;
+               left: var(--space);
+               top: var(--space);
+               right: var(--space);
+               bottom: var(--space);
+               position: absolute;
+               border-radius: 64px;
+               z-index: -2;
+          }
+          #progress{
+               display: block;
+               width: var(--progress, 0%);
+               background-color:aliceblue;
+               transition: all 1.5s ease-in-out;
+               height: 100%;
+          }
+     </style>
+</head>
+
+<body>
+     <audio id="player" src="WhatTheLuck-JahaanChaarYaar.mp3"></audio>
+     <div class="player">
+          <div class="control">
+               <i class="fas fa-play" id="playbtn"></i>
+          </div>
+          <div class="info">File Name
+               <div class="bar">
+                    <div id="progress"></div>
+               </div>
+          </div>
+          <div id="current">0:00</div>
+     </div>
+     <script>
+          let player = document.getElementById("player");
+          let progress = document.getElementById("progress")
+          let playbtn = document.getElementById("playbtn");
+          var playpause =  () => {
+               if(player.paused){
+                    player.play();
+               } else {
+                    player.pause()
+               }
+          }
+          playbtn.addEventListener("click", playpause);
+          player.onplay = () => {
+               playbtn.classList.remove("fa-play");
+               playbtn.classList.add("fa-pause");
+          }
+          player.onpause = () => {
+               playbtn.classList.add("fa-play");
+               playbtn.classList.remove("fa-pause");
+          }
+          player.ontimeupdate = () => {
+               let ct = player.currentTime
+               current.innerHTML = timeFormat(ct)
+
+               let duration = player.duration
+               prog = Math.floor((ct * 100) / duration)
+               progress.style.setProperty("--progress", prog+'%')
+          }
+
+          function timeFormat(ct){
+               minutes = Math.floor(ct / 60)
+               seconds = Math.floor(ct % 60)
+
+               if(seconds < 10){
+                    seconds = `0${seconds}`
+               }
+
+               return `${minutes}:${seconds}`
+          }
+     </script>
+</body>
+
+</html>
